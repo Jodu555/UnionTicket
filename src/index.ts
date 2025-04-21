@@ -17,27 +17,32 @@ const SESSION_ID = process.env.SESSION_ID;
 
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {polling: false});
 async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
-    const response = await axios<RootVenueData>({
-        method: 'POST',
-        url: `https://tickets.union-zeughaus.de/unveu/SynwayVenue/VenueData/Veranstaltungen2/${venueID}`,
-        headers: {
-            "Cookie": `ASP.NET_SessionId=${SESSION_ID}; Path=/; Expires=Mon, 20 Apr 2026 09:56:25 GMT;`
-        }
-    })
-
-    if(response.data.error !== undefined) {
-        console.log(response.data.error);
-        return {success: false};
-    }
+    try {
+        const response = await axios<RootVenueData>({
+            method: 'POST',
+            url: `https://tickets.union-zeughaus.de/unveu/SynwayVenue/VenueData/Veranstaltungen2/${venueID}`,
+            headers: {
+                "Cookie": `ASP.NET_SessionId=${SESSION_ID}; Path=/; Expires=Mon, 20 Apr 2026 09:56:25 GMT;`
+            }
+        })
     
-
-    const blocks = response.data.data.Blocks.filter(x => x.Stand != 'SEKTOR 5' && x.Blocked != true);
-
-    const chosenBlock = blocks[0];
-
-    if(chosenBlock) {
-        console.log(`Trying to add ${blocks[0].ID} in venue ${venueID} to the Basket`);
-        return await addToBasket(venueID, blocks[0].ID);
+        if(response.data.error !== undefined) {
+            console.log(response.data.error);
+            return {success: false};
+        }
+        
+    
+        const blocks = response.data.data.Blocks.filter(x => x.Stand != 'SEKTOR 5' && x.Blocked != true);
+    
+        const chosenBlock = blocks[0];
+    
+        if(chosenBlock) {
+            console.log(`Trying to add ${blocks[0].ID} in venue ${venueID} to the Basket`);
+            return await addToBasket(venueID, blocks[0].ID);
+        }
+    } catch (error) {
+        console.log(error);
+        return {success: false};
     }
 }
 
@@ -56,38 +61,44 @@ interface BasketErrorReturn {
 type BasketReturn = BasketSuccessReturn | BasketErrorReturn;
 
 async function addToBasket(venueID: string, blockID: string): Promise<BasketReturn> {
-    const bodyData = new FormData();
-
-    bodyData.append('Count', 1);
-    bodyData.append('BlockID', blockID,);
-    bodyData.append('ResellingID', '',);
-    bodyData.append('ZD', '',);
-    bodyData.append('ID', venueID,);
-    bodyData.append('SubName', 'Veranstaltungen2');
-
-    const response = await axios<RootShopping>({
-        method: 'POST',
-        url: `https://tickets.union-zeughaus.de/unveu/SynwayVenue/BookTicket/Veranstaltungen2/${venueID}`,
-        data: bodyData,
-        headers: {
-            "Cookie": `ASP.NET_SessionId=${SESSION_ID}; Path=/; Expires=Mon, 20 Apr 2026 09:56:25 GMT;`
+    try {
+        
+        const bodyData = new FormData();
+    
+        bodyData.append('Count', 1);
+        bodyData.append('BlockID', blockID,);
+        bodyData.append('ResellingID', '',);
+        bodyData.append('ZD', '',);
+        bodyData.append('ID', venueID,);
+        bodyData.append('SubName', 'Veranstaltungen2');
+    
+        const response = await axios<RootShopping>({
+            method: 'POST',
+            url: `https://tickets.union-zeughaus.de/unveu/SynwayVenue/BookTicket/Veranstaltungen2/${venueID}`,
+            data: bodyData,
+            headers: {
+                "Cookie": `ASP.NET_SessionId=${SESSION_ID}; Path=/; Expires=Mon, 20 Apr 2026 09:56:25 GMT;`
+            }
+        });
+    
+        if(response.data.error !== undefined) {
+            console.log(response.data.error);
+            return {success: false};
         }
-    });
-
-    if(response.data.error !== undefined) {
-        console.log(response.data.error);
+    
+        // console.log(response.status, response.statusText, response.data);
+        console.log('ADDED TO BASKET OMG 🤯');
+    
+        const addedItem = response.data.data.NewShoppingCart.Items[0];
+    
+        return {success: true, data: {
+            titles: [addedItem.Name1, addedItem.Name2],
+            price: addedItem.Price
+        }};
+    } catch (error) {
+        console.log(error);
         return {success: false};
     }
-
-    // console.log(response.status, response.statusText, response.data);
-    console.log('ADDED TO BASKET OMG 🤯');
-
-    const addedItem = response.data.data.NewShoppingCart.Items[0];
-
-    return {success: true, data: {
-        titles: [addedItem.Name1, addedItem.Name2],
-        price: addedItem.Price
-    }};
 }
 test();
 async function test() {
