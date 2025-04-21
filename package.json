@@ -1,0 +1,22 @@
+{
+  "name": "ticket",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@jodu555/commandmanager": "^1.5.3",
+    "axios": "^1.8.4",
+    "dotenv": "^16.5.0",
+    "node-telegram-bot-api": "^0.66.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "@types/node-telegram-bot-api": "^0.64.8"
+  }
+}
