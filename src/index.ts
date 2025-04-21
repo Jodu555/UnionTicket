@@ -15,7 +15,7 @@ const spiele: Spiel[] = [];
 
 const SESSION_ID = process.env.SESSION_ID;
 
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {polling: true});
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {polling: false});
 async function tryToAddVenueToBasket(venueID: string) {
     const response = await axios<RootVenueData>({
         method: 'POST',
