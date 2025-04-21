@@ -25,20 +25,24 @@ async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
                 "Cookie": `ASP.NET_SessionId=${SESSION_ID}; Path=/; Expires=Mon, 20 Apr 2026 09:56:25 GMT;`
             }
         })
-    
+        
         if(response.data.error !== undefined) {
             console.log(response.data.error);
             return {success: false};
         }
         
-    
+        
         const blocks = response.data.data.Blocks.filter(x => x.Stand != 'SEKTOR 5' && x.Blocked != true);
-    
+        
         const chosenBlock = blocks[0];
-    
+        
         if(chosenBlock) {
+
             console.log(`Trying to add ${blocks[0].ID} in venue ${venueID} to the Basket`);
             return await addToBasket(venueID, blocks[0].ID);
+        } else {
+
+            return {success: false};
         }
     } catch (error) {
         console.log(error);
