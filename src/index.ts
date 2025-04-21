@@ -143,6 +143,8 @@ async function checkForSpiele() {
         }
 
         const worked = await tryToAddVenueToBasket(spiel.ID);
+        console.log(worked);
+        
         if(worked.success === false) {
             console.log('This did not work 😢');
             continue;
