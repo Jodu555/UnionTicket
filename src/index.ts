@@ -16,7 +16,7 @@ const spiele: Spiel[] = [];
 const SESSION_ID = process.env.SESSION_ID;
 
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {polling: false});
-async function tryToAddVenueToBasket(venueID: string) {
+async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
     const response = await axios<RootVenueData>({
         method: 'POST',
         url: `https://tickets.union-zeughaus.de/unveu/SynwayVenue/VenueData/Veranstaltungen2/${venueID}`,
@@ -26,7 +26,8 @@ async function tryToAddVenueToBasket(venueID: string) {
     })
 
     if(response.data.error !== undefined) {
-        return;
+        console.log(response.data.error);
+        return {success: false};
     }
     
 
@@ -132,6 +133,7 @@ async function checkForSpiele() {
 
         const worked = await tryToAddVenueToBasket(spiel.ID);
         if(worked.success === false) {
+            console.log('This did not work 😢');
             continue;
         }
 
