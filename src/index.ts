@@ -41,7 +41,6 @@ async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
         
         if(response.data?.data?.Blocks == undefined) {
             console.log('No blocks found');
-            console.log(response.data);
             return {success: false};
         }
 
@@ -104,7 +103,7 @@ async function addToBasket(venueID: string, blockID: string): Promise<BasketRetu
             return {success: false};
         }
     
-        if(response.data.data.NewShoppingCart == undefined) {
+        if(response.data?.data?.NewShoppingCart == undefined) {
             console.log('No NewShoppingCart found');
             console.log(response.data);
             return {success: false};
