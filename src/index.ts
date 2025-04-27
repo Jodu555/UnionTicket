@@ -25,6 +25,7 @@ async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
                 "Cookie": `ASP.NET_SessionId=${SESSION_ID}; Path=/; Expires=Mon, 20 Apr 2026 09:56:25 GMT;`
             }
         })
+        console.log(response.status);
         
         
         if(response.data.error !== undefined) {
