@@ -31,7 +31,13 @@ async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
             return {success: false};
         }
         
-        
+        if(response.data.data.Blocks == undefined) {
+            console.log('No blocks found');
+            console.log(response.data);
+            return {success: false};
+        }
+
+
         const blocks = response.data.data.Blocks.filter(x => x.Stand != 'SEKTOR 5' && x.Blocked != true);
         
         const chosenBlock = blocks[0];
@@ -135,6 +141,19 @@ async function main() {
             }
         )
     );
+
+    commandManager.registerCommand(
+        new Command(
+            'listSpiel', // The Command
+            'listSpiel', // A Usage Info with arguments
+            'Lists all watched Spiele', // A Description what the command does
+            (command, [...args], scope) => {
+                const spieleString = spiele.map(x => `- ${x.ID} (${x.inBasket ? '' : 'nicht'} im Warenkorb) zum Basket hinzugefügt: ${x.lastConfirmation}`).join('\n');
+                return `Liste der Spiele:\n\n${spieleString}`;
+            }
+        )
+    );
+
     await checkForSpiele();
 }
 
