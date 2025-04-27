@@ -219,3 +219,16 @@ async function checkForSpiele() {
 
     setTimeout(checkForSpiele, 30 * 1000);
 }
+
+process.on('uncaughtException', (err) => {
+    console.log(err);
+});
+
+process.on('unhandledRejection', (err) => {
+    console.log(err);
+});
+
+process.on('SIGINT', () => {
+    console.log('SIGINT');
+    process.exit(0);
+});
