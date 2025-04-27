@@ -96,6 +96,12 @@ async function addToBasket(venueID: string, blockID: string): Promise<BasketRetu
             return {success: false};
         }
     
+        if(response.data.data.NewShoppingCart == undefined) {
+            console.log('No NewShoppingCart found');
+            console.log(response.data);
+            return {success: false};
+        }
+
         // console.log(response.status, response.statusText, response.data);
         console.log('ADDED TO BASKET OMG 🤯');
     
