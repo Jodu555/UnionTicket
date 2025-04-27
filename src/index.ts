@@ -26,8 +26,14 @@ async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
             }
         })
         
+        
         if(response.data.error !== undefined) {
             console.log(response.data.error);
+            return {success: false};
+        }
+
+        if(response.data == undefined) {
+            console.log(response.data);
             return {success: false};
         }
         
