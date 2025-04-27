@@ -30,6 +30,7 @@ async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
         
         if(response.data?.error !== undefined) {
             console.log(response.data.error);
+            console.log(response.data);
             return {success: false};
         }
 
