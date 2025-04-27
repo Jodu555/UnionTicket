@@ -130,8 +130,8 @@ async function main() {
     const commandManager = CommandManager.createCommandManager(process.stdin, process.stdout);    
     commandManager.registerCommand(
         new Command(
-            'addSpiel', // The Command
-            'addSpiel <ID>', // A Usage Info with arguments
+            'add', // The Command
+            'add <ID>', // A Usage Info with arguments
             'Adds a Spiel to be watched', // A Description what the command does
             (command, [...args], scope) => {
 
@@ -150,12 +150,33 @@ async function main() {
 
     commandManager.registerCommand(
         new Command(
-            'listSpiel', // The Command
-            'listSpiel', // A Usage Info with arguments
+            'list', // The Command
+            'list', // A Usage Info with arguments
             'Lists all watched Spiele', // A Description what the command does
             (command, [...args], scope) => {
                 const spieleString = spiele.map(x => `- ${x.ID} (${x.inBasket ? '' : 'nicht'} im Warenkorb) zum Basket hinzugefügt: ${x.lastConfirmation}`).join('\n');
                 return `Liste der Spiele:\n\n${spieleString}`;
+            }
+        )
+    );
+
+    commandManager.registerCommand(
+        new Command(
+            'remove', // The Command
+            'remove <ID>', // A Usage Info with arguments
+            'Removes a watched Spiel', // A Description what the command does
+            (command, [...args], scope) => {
+
+                const ID = args[1] as string;
+
+                const spiel = spiele.find(x => x.ID === ID);
+                if(spiel === undefined) {
+                    return `Spiel ${ID} nicht gefunden`;
+                }
+
+                spiele.splice(spiele.indexOf(spiel), 1);
+
+                return `Spiel ${ID} entfernt`;
             }
         )
     );
