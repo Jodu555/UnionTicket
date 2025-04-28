@@ -73,6 +73,7 @@ interface BasketSuccessReturn {
 
 interface BasketErrorReturn {
     success: false;
+    variant?: number;
 }
 
 type BasketReturn = BasketSuccessReturn | BasketErrorReturn;
@@ -100,7 +101,7 @@ async function addToBasket(venueID: string, blockID: string): Promise<BasketRetu
     
         if(response.data.error !== undefined) {
             console.log(response.status, response.statusText, response.data.error);
-            return {success: false};
+            return {success: false, variant: -1};
         }
     
         if(response.data?.data?.NewShoppingCart == undefined) {
@@ -204,6 +205,9 @@ async function checkForSpiele() {
         
         if(worked.success === false) {
             console.log('This did not work 😢');
+            if(worked.variant === -1) {
+                bot.sendMessage(process.env.TELEGRAM_CHAT_ID, `Adding Venue ${spiel.ID} to Basket failed 😢 Bitte gucken....`);
+            }
             continue;
         }
 
