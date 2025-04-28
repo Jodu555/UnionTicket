@@ -45,7 +45,7 @@ async function tryToAddVenueToBasket(venueID: string): Promise<BasketReturn> {
         }
 
 
-        const blocks = response.data.data.Blocks.filter(x => x.Stand != 'SEKTOR 5' && x.Blocked != true);
+        const blocks = response.data.data.Blocks.filter(x => x.Stand != 'SEKTOR 5' && x.Blocked == false);
         
         const chosenBlock = blocks[0];
         
@@ -99,13 +99,13 @@ async function addToBasket(venueID: string, blockID: string): Promise<BasketRetu
         });
     
         if(response.data.error !== undefined) {
-            console.log(response.data.error);
+            console.log(response.status, response.statusText, response.data.error);
             return {success: false};
         }
     
         if(response.data?.data?.NewShoppingCart == undefined) {
-            console.log('No NewShoppingCart found');
-            console.log(response.data);
+            // console.log('No NewShoppingCart found');
+            // console.log(response.data);
             return {success: false};
         }
 
