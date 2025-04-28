@@ -206,7 +206,7 @@ async function checkForSpiele() {
         if(worked.success === false) {
             console.log('This did not work 😢');
             if(worked.variant === -1) {
-                bot.sendMessage(process.env.TELEGRAM_CHAT_ID, `Adding Venue ${spiel.ID} to Basket failed 😢 Bitte gucken....`);
+                await sendTelegramMessage(`Adding Venue ${spiel.ID} to Basket failed 😢 Bitte gucken....`);
             }
             continue;
         }
@@ -218,10 +218,17 @@ async function checkForSpiele() {
         message += `  ${worked.data.titles.map((title) => `- ${title}`).join('\n')}
         `.trim();
 
-        bot.sendMessage(process.env.TELEGRAM_CHAT_ID, message);
+        await sendTelegramMessage(message);
     }
 
     setTimeout(checkForSpiele, 30 * 1000);
+}
+
+async function sendTelegramMessage(message: string) {
+    const chatIDS = process.env.TELEGRAM_CHAT_ID.split(',');
+    for await (const chatID of chatIDS) {
+        await bot.sendMessage(chatID, message);
+    }
 }
 
 process.on('uncaughtException', (err) => {
