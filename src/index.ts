@@ -135,7 +135,13 @@ async function test() {
 
 main();
 async function main() {
-    const commandManager = CommandManager.createCommandManager(process.stdin, process.stdout);    
+    const commandManager = CommandManager.createCommandManager(process.stdin, process.stdout); 
+    
+    commandManager.registerCommand(new Command(['test', 't'], 'test', 'Tests The Telegram Chat IDS', async (command, [...args], scope) => {
+        await sendTelegramMessage('Test');
+        return `Testing...`;
+    }));
+    
     commandManager.registerCommand(
         new Command(
             ['add', 'a'], // The Command
