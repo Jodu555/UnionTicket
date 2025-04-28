@@ -138,7 +138,7 @@ async function main() {
     const commandManager = CommandManager.createCommandManager(process.stdin, process.stdout);    
     commandManager.registerCommand(
         new Command(
-            'add', // The Command
+            ['add', 'a'], // The Command
             'add <ID>', // A Usage Info with arguments
             'Adds a Spiel to be watched', // A Description what the command does
             (command, [...args], scope) => {
@@ -158,7 +158,7 @@ async function main() {
 
     commandManager.registerCommand(
         new Command(
-            'list', // The Command
+            ['list', 'l'], // The Command
             'list', // A Usage Info with arguments
             'Lists all watched Spiele', // A Description what the command does
             (command, [...args], scope) => {
@@ -170,7 +170,7 @@ async function main() {
 
     commandManager.registerCommand(
         new Command(
-            'remove', // The Command
+            ['remove', 'r'], // The Command
             'remove <ID>', // A Usage Info with arguments
             'Removes a watched Spiel', // A Description what the command does
             (command, [...args], scope) => {
