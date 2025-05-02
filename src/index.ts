@@ -102,7 +102,7 @@ async function addToBasket(venueID: string, blockID: string): Promise<BasketRetu
         if(response.data.error !== undefined) {
             console.log(response.status, response.statusText, response.data.error);
 
-            if(response.data.error.includes('leider nichts mehr frei')) {
+            if(response.data.error.includes('leider nichts mehr frei') || response.data.error.includes('nicht mehr verfügbar')) {
                 return {success: false};
             } else {
                 return {success: false, variant: -1};
